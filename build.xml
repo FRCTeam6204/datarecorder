@@ -1,0 +1,25 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<project name="Data Recirder" default="compile.jar">
+  <property name="version" value="current"/>
+  <property name="build.dir" value="build"/>
+  <property name="src.dir" value="src"/>
+  <target name="compile.class"
+          description="Compile the source code.">
+    <mkdir dir="${build.dir}" />
+    <echo message="Compiling datarecorder.." />
+    <javac srcdir="${src.dir}"
+           destdir="${build.dir}"
+           includeAntRuntime="no"
+           includeJavaRuntime="no"
+           target="${ant.java.version}"
+           source="${ant.java.version}"
+           compiler="javac${ant.java.version}"
+           debug="true"></javac>
+  </target>
+  <target name="compile.jar" depends="compile.class">
+    <echo message="Compiling datarecorder.jar..."/>
+    <jar destfile="datarecorder.jar"
+      basedir="${build.dir}"
+      includes="org/team6204/frc/datarecorder/*"/>
+    </target>
+</project>

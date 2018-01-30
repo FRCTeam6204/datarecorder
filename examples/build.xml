@@ -1,0 +1,19 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<project name="Data Recorder Examples" default="compile.examples">
+ <target name="compile.examples">
+   <property name="version" value="current"/>
+   <property name="build.dir" value="build"/>
+   <property name="src.dir" value="src"/>
+   <echo message="Compiling examples..."/>
+   <javac srcdir="."
+         destdir="."
+         classpath=".:../datarecorder.jar"
+         includeAntRuntime="no"
+         includeJavaRuntime="no"
+         target="${ant.java.version}"
+         source="${ant.java.version}"
+         compiler="javac${ant.java.version}"
+         debug="true">
+  </javac>
+ </target>
+</project>
