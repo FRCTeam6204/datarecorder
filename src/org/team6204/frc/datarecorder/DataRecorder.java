@@ -9,10 +9,10 @@ import java.util.function.Supplier;
 import java.io.IOException;
 
 public class DataRecorder {
-    private List<Recorder<Double>> doubleRecords = Collections.synchronizedList(new ArrayList<Recorder<Double>>());
+    private List<Recorder<Number>> numberRecords = Collections.synchronizedList(new ArrayList<Recorder<Number>>());
     private List<Recorder<String>> stringRecords = Collections.synchronizedList(new ArrayList<Recorder<String>>());
     private List<Recorder<Boolean>> booleanRecords = Collections.synchronizedList(new ArrayList<Recorder<Boolean>>());
-    private List<Recorder<List<Double>>> doubleArrayRecords = Collections.synchronizedList(new ArrayList<Recorder<List<Double>>>());
+    private List<Recorder<List<Number>>> numberArrayRecords = Collections.synchronizedList(new ArrayList<Recorder<List<Number>>>());
     private List<Recorder<List<String>>> stringArrayRecords = Collections.synchronizedList(new ArrayList<Recorder<List<String>>>());
     private List<Recorder<List<Boolean>>> booleanArrayRecords = Collections.synchronizedList(new ArrayList<Recorder<List<Boolean>>>());
 
@@ -21,12 +21,12 @@ public class DataRecorder {
     private boolean recording;
 
     /**
-     * Sampling rate in hertz
+     * Sampling period in milliseconds
      */
-    private long samplingRate = 50;
+    private long samplingPeriod = 20;
 
-    public void recordDouble(String field, Supplier<Double> function) {
-        doubleRecords.add(new Recorder<Double>(field, function));
+    public void recordNumber(String field, Supplier<Number> function) {
+        numberRecords.add(new Recorder<Number>(field, function));
     }
 
     public void recordString(String field, Supplier<String> function) {
@@ -37,8 +37,8 @@ public class DataRecorder {
         booleanRecords.add(new Recorder<Boolean>(field, function));
     }
 
-    public void recordDoubleArray(String field, Supplier<List<Double>> function) {
-        doubleArrayRecords.add(new Recorder<List<Double>>(field, function));
+    public void recordNumberArray(String field, Supplier<List<Number>> function) {
+        numberArrayRecords.add(new Recorder<List<Number>>(field, function));
     }
 
     public void recordStringArray(String field, Supplier<List<String>> function) {
@@ -50,10 +50,10 @@ public class DataRecorder {
     }
 
     public void record() {
-        recordAll(doubleRecords);
+        recordAll(numberRecords);
         recordAll(stringRecords);
         recordAll(booleanRecords);
-        recordAll(doubleArrayRecords);
+        recordAll(numberArrayRecords);
         recordAll(stringArrayRecords);
         recordAll(booleanArrayRecords);
     }
@@ -65,7 +65,7 @@ public class DataRecorder {
             public void run() {
                 record();
             }
-        }, 0, 1000 * 1/samplingRate);
+        }, 0, samplingPeriod);
     }
 
     public void stopRecording() {
@@ -75,22 +75,31 @@ public class DataRecorder {
 
     public void save(String filename) throws IOException {
         CSVWriter writer = new CSVWriter();
-        writeAll(writer, doubleRecords);
+        writeAll(writer, numberRecords);
         writeAll(writer, stringRecords);
         writeAll(writer, booleanRecords);
-        writeAll(writer, doubleArrayRecords);
+        writeAll(writer, numberArrayRecords);
         writeAll(writer, stringArrayRecords);
         writeAll(writer, booleanArrayRecords);
 
         writer.write(filename);
     }
 
+    public void clear() {
+        clearAll(numberRecords);
+        clearAll(stringRecords);
+        clearAll(booleanRecords);
+        clearAll(numberArrayRecords);
+        clearAll(stringArrayRecords);
+        clearAll(booleanArrayRecords);
+    }
+
     public List<?> getRecords(DataType type) {
         switch (type) {
-        case Double:
-            return doubleRecords;
-        case DoubleArray:
-            return doubleArrayRecords;
+        case Number:
+            return numberRecords;
+        case NumberArray:
+            return numberArrayRecords;
         case String:
             return stringRecords;
         case StringArray:
@@ -114,12 +123,12 @@ public class DataRecorder {
         throw new IllegalArgumentException();
     }
 
-    public double getSamplingRate() {
-        return samplingRate;
+    public long getSamplingPeriod() {
+        return samplingPeriod;
     }
 
-    public void setSamplingRate(long rate) {
-        samplingRate = rate;
+    public void setSamplingPeriod(long period) {
+        samplingPeriod = period;
     }
 
     public boolean isRecording() {
@@ -135,6 +144,12 @@ public class DataRecorder {
     private void writeAll(CSVWriter writer, List<? extends Recorder<?>> list) {
         for (Recorder<?> recorder : list) {
             writer.addField(recorder.getName(), (String[]) recorder.getRecord().stream().map(Object::toString).toArray(String[]::new));
+        }
+    }
+
+    private void clearAll(List<? extends Recorder<?>> list) {
+        for (Recorder<?> recorder : list) {
+            recorder.clear();
         }
     }
 

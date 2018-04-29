@@ -1,8 +1,8 @@
 package org.team6204.frc.datarecorder;
 
 public enum DataType {
-    Double,
-    DoubleArray,
+    Number,
+    NumberArray,
     String,
     StringArray,
     Boolean,

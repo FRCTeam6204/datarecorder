@@ -27,4 +27,8 @@ public class Recorder<T>  {
     public List<T> getRecord() {
         return record;
     }
+
+    public void clear() {
+        record.clear();
+    }
 }

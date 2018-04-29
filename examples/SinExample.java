@@ -41,8 +41,8 @@ public class SinExample {
         } catch (InterruptedException e) {
             System.exit(0);
         }
-        recorder.recordDouble("X", example::getX);
-        recorder.recordDouble("Sin of X", example::getY);
+        recorder.recordNumber("X", example::getX);
+        recorder.recordNumber("Sin of X", example::getY);
 
         Timer timer = new Timer();
         recorder.startRecording();
@@ -75,7 +75,7 @@ public class SinExample {
     public static void startPlayback() {
         System.out.print("Starting playback");
         player.addDoublePlayer(
-                (List<Double>) recorder.getRecorderByName(DataType.Double, "Sin of X").getRecord(),
+                (List<Double>) recorder.getRecorderByName(DataType.Number, "Sin of X").getRecord(),
                 (Double d) -> { example.setY(d); example.draw(); }
                 );
         try {

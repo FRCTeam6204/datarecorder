@@ -1,5 +1,5 @@
 <?xml version = "1.0" encoding="UTF-8"?>
-<project name="Data Recirder" default="compile.jar">
+<project name="Data Recorder" default="compile.jar">
   <property name="version" value="current"/>
   <property name="build.dir" value="build"/>
   <property name="src.dir" value="src"/>
@@ -20,6 +20,13 @@
     <echo message="Compiling datarecorder.jar..."/>
     <jar destfile="datarecorder.jar"
       basedir="${build.dir}"
-      includes="org/team6204/frc/datarecorder/*"/>
-    </target>
+      includes="org/team6204/frc/datarecorder/* org/team6204/frc/datarecorder/testable/*"/>
+  </target>
+  <target name="install.jar" depends="compile.jar">
+    <echo message="Installing datarecorder.jar in wpilib user library directory..."/>
+    <exec executable="cp">
+      <arg value="datarecorder.jar"/>
+      <arg value="${user.home}/wpilib/user/java/lib/"/>
+    </exec>
+  </target>
 </project>
